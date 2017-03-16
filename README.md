@@ -78,9 +78,13 @@ drwxr-xr-x 5 root root    4096 Mar 16 03:55 grub
 
 Remember /boot should be mode 700, it should be by default but it can't hurt to check
 
-### Reboot and await success
+### Update your image profile via the Linode web UI
 
-You can reboot from software or via the web UI. You should be logged into the console as it reboots so you can identify any errors. In my case, the following entries were necessary in my /etc/default/grub:
+In your profile, click 'Edit'. You will want to change the Boot Settings setting named 'Kernel' to GRUB2. If things go wrong, you can change this back to a Linode kernel and things will boot fine as before, so don't worry about breaking anything. Save the change.
+
+### Reboot and await success, or perhaps failure
+
+You can now reboot from software or via the web UI. You should be logged into the console as it reboots so you can identify any errors. In my case, the following entries were necessary in my /etc/default/grub:
 
 ```
 # cat /etc/default/grub | grep -v ^#

@@ -23,15 +23,17 @@ Once you have booted, make sure your uname -a output roughly matches your grsecu
 These should cover it, though I may have missed 1 or 2:
 
 ```
-apt-get install build-essential bison flex kernel-package libncurses5
+apt-get install build-essential bison flex kernel-package libncurses5 paxctl
 ```
 
 ### Download the Linux kernel source and grsecurity patch and extract / patch
 
 For this example, I will be using the following:
 
-* grsecurity-3.1-4.4.54-201703150048.patch
-* linux-4.4.54.tar.xz
+From https://grsecurity.net/download.php#test:
+    * grsecurity-3.1-4.4.54-201703150048.patch
+From kernel.org:
+    * linux-4.4.54.tar.xz
 
 ```
 # cd /usr/src
@@ -148,6 +150,69 @@ You might be prompted to turn learning mode off using gradm -D first, which will
 Once this is done, peruse /etc/grsec/policy.output and marvel at how granular some of the permissions are, especially if you have a system with a dedicated role (i.e. a web server only, or a mail server, etc)
 
 It is also very cool for multi-user systems where users only check e-mail or use some basic functionality- when you don't want users snooping around the box. With the right policy, users won't even be able to see / let alone execute /bin/cat or whichever other applications a user might run without necessity.
+
+## Test and consider using paxctld
+
+I am not familiar with paxctld, I have always use paxctl manually to opt certain executables out of certain PAX mitigations whenever necessary, but you might want to look into paxctld as I believe it automates this via some sort of profile/configuration system.
+
+## Test userspace memory protections using paxtest
+
+You can also now try paxtest to make sure userspace memory protections are working as expected
+
+```
+$ sudo apt-get install paxtest
+$ ./paxtest blackhat
+PaXtest - Copyright(c) 2003,2004 by Peter Busser <peter@adamantix.org>
+Released under the GNU Public Licence version 2 or later
+
+Writing output to /home/a/paxtest.log
+It may take a while for the tests to complete
+Test results:
+PaXtest - Copyright(c) 2003,2004 by Peter Busser <peter@adamantix.org>
+Released under the GNU Public Licence version 2 or later
+
+Mode: Blackhat
+Linux gutter 4.4.54-grsec #1 SMP Thu Mar 16 03:36:35 UTC 2017 x86_64 GNU/Linux
+
+Executable anonymous mapping             : Killed
+Executable bss                           : Killed
+Executable data                          : Killed
+Executable heap                          : Killed
+Executable stack                         : Killed
+Executable shared library bss            : Killed
+Executable shared library data           : Killed
+Executable anonymous mapping (mprotect)  : Killed
+Executable bss (mprotect)                : Killed
+Executable data (mprotect)               : Killed
+Executable heap (mprotect)               : Killed
+Executable stack (mprotect)              : Killed
+Executable shared library bss (mprotect) : Killed
+Executable shared library data (mprotect): Killed
+Writable text segments                   : Killed
+Anonymous mapping randomisation test     : 28 bits (guessed)
+Heap randomisation test (ET_EXEC)        : 23 bits (guessed)
+Heap randomisation test (PIE)            : 35 bits (guessed)
+Main executable randomisation (ET_EXEC)  : 28 bits (guessed)
+Main executable randomisation (PIE)      : 28 bits (guessed)
+Shared library randomisation test        : 28 bits (guessed)
+Stack randomisation test (SEGMEXEC)      : 35 bits (guessed)
+Stack randomisation test (PAGEEXEC)      : 35 bits (guessed)
+Arg/env randomisation test (SEGMEXEC)    : 39 bits (guessed)
+Arg/env randomisation test (PAGEEXEC)    : 39 bits (guessed)
+Randomization under memory exhaustion @~0: 28 bits (guessed)
+Randomization under memory exhaustion @0 : 28 bits (guessed)
+Return to function (strcpy)              : paxtest: return address contains a NULL byte.
+Return to function (memcpy)              : Killed
+Return to function (strcpy, PIE)         : paxtest: return address contains a NULL byte.
+Return to function (memcpy, PIE)         : Killed
+$
+```
+
+This is a good result. Good luck with Gera's Insecure Programming challenges now :>
+
+One weakness you will have unless you bootstrapped your entire system using PIE- the main executable text section will not be randomized. This is usually not a major problem given all of the other mitigations in place and the relatively small size of this section, making it not so rich of an area for LOP (libc oriented programming)
+
+If you want to build a PIE distribution, your best bet might be Gentoo, but I haven't done this for many years so there may be some other distribution that let's you do this easily. Try to Google for "full pie linux system" or something like this
 
 ## Enjoy a significantly hardened system
 

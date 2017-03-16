@@ -32,6 +32,7 @@ For this example, I will be using the following:
 
 From https://grsecurity.net/download.php#test:
     * grsecurity-3.1-4.4.54-201703150048.patch
+
 From kernel.org:
     * linux-4.4.54.tar.xz
 

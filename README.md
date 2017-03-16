@@ -1,6 +1,11 @@
 # grsec-debian-linode
 Quick guide to getting a grsec kernel running on a Debian Linode VM
 
+## Audience
+
+This guide is as much for my own documentation as it is for anyone else. I hope someone finds it useful despite it not being a terribly difficult process. I rarely build custom kernels so this is a huge timesaver for me when I need it
+
+
 ## Credits
 
 This is based on various posts on The Internet (TM) and excellent documentation from Debian and to a lesser extent, Linode. Also, much help from the oh so kind, humble and modest Bradley Spengler. His family is also pretty nice. Really nice.

@@ -52,6 +52,22 @@ In the make menuconfig option, grsecurity is found under "Security". Enable it a
 
 From there, you can choose to enable/disable specific features. I recommend leaving RBAC enabled for servers, it's a very powerful and mature feature (>10 years old) and has a very advanced learning mode that supports reduction and all sorts of other cool things that produce a very close to perfect policy. It will, however, require quite a bit of configuring, especially if you are going to properly use role transitions to protect the kernel from the root user.
 
+Some good features for multi-user machines where you would like to limit mischief, but don't want to use the full RBAC, I suggest making use of the Trusted Path Execution (TPE) feature, which restricts non-root users to running only root owned read-only binaries. Be sure to use a chmod scheme on the more powerful interpreters. For example:
+
+```
+# for INTERP in /usr/bin/python* /usr/bin/perl* /usr/bin/awk* /usr/bin/ruby* /usr/bin/java*
+do
+  chown root.trustexec ${INTERP}
+  chmod 750 ${INTERP}
+done
+```
+
+In this example case, make sure the users with TPE restrictions are NOT in the group 'trustexec' and that users you do trust are in this group. The GID valueis configurable in make menuconfig.
+
+You can do similar things to restrict client and server sockets per GID, if you'd like to restrict users from establishing sockets, internally or externally. Optionally, you can use iptables egress rules, but those won't help reduce your UNIX socket attack surface locally. Again, the correct way here is to use RBAC, but that's more work. Security is hard.
+
+Keep in mind this is only as effective as you are thorough. The correct way to do this is by whitelisting things granularly using the RBAC system. That said, if you are reasonably good at attacking systems, you should be able to disable all of the more powerful interpreters on the system
+
 ### Building the Debian package
 
 At this point, you can dpkg --list | grep -E '(linux-header|linux-image)' and use dpkg --remove on each, as well as dpkg --purge. If things go wrong, Linode will allow you to fix your kernel via the web UI later

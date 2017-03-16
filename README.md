@@ -5,7 +5,6 @@ Quick guide to getting a grsec kernel running on a Debian Linode VM
 
 This guide is as much for my own documentation as it is for anyone else. I hope someone finds it useful despite it not being a terribly difficult process. I rarely build custom kernels so this is a huge timesaver for me when I need it
 
-
 ## Credits
 
 This is based on various posts on The Internet (TM) and excellent documentation from Debian and to a lesser extent, Linode. Also, much help from the oh so kind, humble and modest Bradley Spengler. His family is also pretty nice. Really nice.
@@ -32,6 +31,8 @@ For this example, I will be using the following:
 
 From https://grsecurity.net/download.php#test: grsecurity-3.1-4.4.54-201703150048.patch or the test patch if you don't pay the ransom Bradley demands due to Linus being rude to him
 From kernel.org: linux-4.4.54.tar.xz
+
+Don't forget to get the GPG signatures for each file and test their validity
 
 ```
 # cd /usr/src
@@ -117,7 +118,7 @@ That's it. Unless you fiddled too much in menuconfig and broke something by disa
 
 If you don't want to actually use the RBAC system, I still recommend you put it in learning mode for a week or two and let it produce a policy just so you can see how granular it is and well the learning mode works. Follow these steps
 
-#### Install gradm from grsecurity.net
+#### Install gradm from https://grsecurity.net/download.php?#test
 
 Visit https://grsecurity.net/download.php#test and find the gradm tarball. In this case, I will use gradm-3.1-201701031918.tar.gz
 
@@ -153,6 +154,8 @@ It is also very cool for multi-user systems where users only check e-mail or use
 ## Test and consider using paxctld
 
 I am not familiar with paxctld, I have always use paxctl manually to opt certain executables out of certain PAX mitigations whenever necessary, but you might want to look into paxctld as I believe it automates this via some sort of profile/configuration system.
+
+It is available at https://grsecurity.net/download.php#test
 
 ## Test userspace memory protections using paxtest
 

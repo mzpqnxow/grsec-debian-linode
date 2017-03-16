@@ -30,11 +30,8 @@ apt-get install build-essential bison flex kernel-package libncurses5 paxctl
 
 For this example, I will be using the following:
 
-From https://grsecurity.net/download.php#test:
-    * grsecurity-3.1-4.4.54-201703150048.patch
-
-From kernel.org:
-    * linux-4.4.54.tar.xz
+From https://grsecurity.net/download.php#test: grsecurity-3.1-4.4.54-201703150048.patch or the test patch if you don't pay the ransom Bradley demands due to Linus being rude to him
+From kernel.org: linux-4.4.54.tar.xz
 
 ```
 # cd /usr/src

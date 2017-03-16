@@ -45,6 +45,7 @@ From kernel.org:
 # zcat /proc/config.gz > .config
 # make oldconfig
 # make menuconfig
+```
 
 ### Configuring grsecurity
 

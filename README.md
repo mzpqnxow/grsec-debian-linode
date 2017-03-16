@@ -1,4 +1,4 @@
-# grsec-debina-linode
+# grsec-debian-linode
 Quick guide to getting a grsec kernel running on a Debian Linode VM
 
 ## Credits

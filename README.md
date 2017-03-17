@@ -22,7 +22,7 @@ Once you have booted, make sure your uname -a output roughly matches your grsecu
 These should cover it, though I may have missed 1 or 2:
 
 ```
-apt-get install gcc-4.9-plugin-dev build-essential bison flex kernel-package libncurses5 paxctl
+apt-get install gcc-4.9-plugin-dev build-essential bison flex kernel-package libncurses5 paxctl libpam0g-dev
 ```
 
 ### Download the Linux kernel source and grsecurity patch and extract / patch

@@ -72,7 +72,7 @@ Keep in mind this is only as effective as you are thorough. The correct way to d
 
 At this point, you can dpkg --list | grep -E '(linux-header|linux-image)' and use dpkg --remove on each, as well as dpkg --purge. If things go wrong, Linode will allow you to fix your kernel via the web UI later
 
-Ok, build the packages now
+Ok, build the packages now from inside the /usr/src/linux-X.Y.Z directory, where you ran *make menuconfig*
 
 ```
 # rm -f /usr/src/linux;ln -sf $PWD /usr/src/linux
@@ -82,6 +82,7 @@ Ok, build the packages now
 You should now have two Debian packages in /usr/src. You can install them with dpkg now.
 
 ```
+# cd /usr/src
 # dpkg -i /usr/src/linux-headers-4.4.54-grsec_1_amd64.deb /usr/src/linux-image-4.4.54-grsec_1_amd64.deb
 # update-initramfs -c -k 4.4.54
 # update-grub2
@@ -153,7 +154,9 @@ To enable learning mode (minimal performance impact, will not enforce any permis
 
 You will be prompted for some role passwords, depending on how you plan to use (or not use) the RBAC system, these should be carefully chosen and not forgotten.
 
-### Producing a policy from learning logs after 1-2 weeks of system usage
+### Producing a policy from learning logs after some period of system usage
+
+Remember you won't want to perform any "powerful" operations during this time, unless you don't intend to protect the system from root. If you do perform system administration actions, they will be learned by the learning system and will be permitted by the policy when generated
 
 Convert the learning logs into a policy
 
@@ -161,15 +164,13 @@ Convert the learning logs into a policy
 # gradm -F -L /etc/grsec/learning.logs -O /etc/grsec/policy.output
 ```
 
-You might be prompted to turn learning mode off using gradm -D first, which will require the admin role password.
+Once this is done, peruse /etc/grsec/policy.output and marvel at how granular some of the permissions are and how individual file access in a directory were reduced to wildcards and such, especially if you have a system with a dedicated role. The policy will look really nice especially if you have a system with a dedicated role such as a web server, load balancer, git server, etc. since the activity on the machine will be very regular. You'll want to go thoroughly through the policy to make sure inappropriate actions didn't taint the learning mode.
 
-Once this is done, peruse /etc/grsec/policy.output and marvel at how granular some of the permissions are, especially if you have a system with a dedicated role (i.e. a web server only, or a mail server, etc)
+The RBAC system is also very cool for multi-user systems where users only check e-mail or use some basic functionality like IRC or silc but you don't want users snooping around or attempting to attack the system. With the right policy, users won't even be able to see / let alone execute /bin/cat or whichever other applications a user might run outside of what is intended.
 
-It is also very cool for multi-user systems where users only check e-mail or use some basic functionality- when you don't want users snooping around the box. With the right policy, users won't even be able to see / let alone execute /bin/cat or whichever other applications a user might run without necessity.
+## Consider using paxctld if you have applications that require opting out of some PaX features
 
-## Test and consider using paxctld
-
-I am not familiar with paxctld, I have always use paxctl manually to opt certain executables out of certain PAX mitigations whenever necessary, but you might want to look into paxctld as I believe it automates this via some sort of profile/configuration system.
+I am not very familiar with paxctld, I have always use paxctl manually to opt certain executables out of certain PaX mitigations whenever necessary, but you might want to look into it as I believe it automates this via some sort of profile/configuration system that keeps things in order even if the executables are updated by your distribution's package manager.
 
 It is available at https://grsecurity.net/download.php#test
 

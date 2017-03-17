@@ -236,3 +236,7 @@ If you want to build a PIE distribution, your best bet might be Gentoo, but I ha
 ## Enjoy a significantly hardened system
 
 With or without RBAC, you now have a system that is significantly hardened against both userspace memory corruption attacks and logic/race condition vulnerabilities as well as a kernel that is hardened against many classes of attacks, which means both public and private bugs will be squashed. I say most because the perfect bugs will still be exploitable, though they will often be more difficulty since grsecurity hides all of the systems symbols and there is no RPM somewhere on the Internet or on your local machine with kernel symbol addresses. The types of bugs that will kill you are those with read/write anywhere, especially with read relative primitives. This means you've reduced your susceptibility to 0day by a non-negligible quanity.
+
+## Oh, don't forget !!
+
+Once you generate your policy, make sure you actually have it turn on when the machine boots. This can be done via /etc/rc.local or in other locations depending on the distribution

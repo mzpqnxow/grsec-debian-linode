@@ -1,0 +1,37 @@
+REVISION=1
+KERNEL=$(basename $PWD)
+SRCDIR=/usr/src
+LOCALVERSION=-grsec
+CPU_COUNT=$(cat /proc/cpuinfo  | grep ^processor | tail -1 | cut -d ':' -f 2)
+echo $KERNEL | grep '^linux-*' 2>&1 >/dev/null
+if [ $? -ne 0 ]; then
+  echo "FAIL: working directory must be in one of the following:"
+  find $SRCDIR -maxdepth 1 ! -path $SRCDIR -type d -name 'linux-[3-9]*' \
+    | while read name
+      do
+    echo "  - $name"
+      done
+  exit 1
+fi
+echo -n "Preparing for kernel $KERNEL... press enter to continue"
+read
+echo
+rm -f /usr/src/linux
+ln -sf $PWD /usr/src/linux
+echo "Making kpkg with CONCURRENCY_LEVEL=$[CPU_COUNT + 2]"
+echo
+CONCURRENCY_LEVEL=$[$CPU_COUNT + 2] make-kpkg \
+  --rootcmd fakeroot \
+            kernel_image \
+            kernel_headers \
+  --initrd --revision=$REVISION
+pushd ..
+ls -l linux-image-$KERNEL.deb
+ls -l linux-headers-$KERNEL.deb
+popd
+echo "Please now use dpkg -i on the new .deb files"
+echo
+echo "Once completed, run the following commands"
+echo
+echo "update-initramfs -c -k ${KERNEL}${LOCALVERSION}"
+

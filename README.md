@@ -9,6 +9,10 @@ This guide is as much for my own documentation as it is for anyone else. I hope 
 
 This is based on various posts on The Internet (TM) and excellent documentation from Debian and to a lesser extent, Linode. Also, much help from the oh so kind, humble and modest Bradley Spengler. His family is also pretty nice. Really nice.
 
+## WARNING
+
+The `make-kpkg` tool has been deprecated as of Debian 9 and building `.deb` packages is supported by the upstream kernel. It can be invoked via `make deb-pkg`
+
 ## Steps
 
 ### Create and boot your Linode
